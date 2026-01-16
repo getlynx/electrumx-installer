@@ -189,6 +189,12 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 		_warning "Python 3.13 detected. Falling back to LevelDB because python-rocksdb does not build cleanly yet."
 		USE_ROCKSDB=0
 	fi
+	if [ "$NAME" = "DebianGNULinux" ] && [ $USE_ROCKSDB == 1 ] && declare -f ver > /dev/null; then
+		if [ $(ver "$VERSION_ID") -ge $(ver "12") ]; then
+			_warning "Debian $VERSION_ID detected. Falling back to LevelDB because python-rocksdb builds are failing on Debian 12+."
+			USE_ROCKSDB=0
+		fi
+	fi
 
 
 	_status "Installing git"
