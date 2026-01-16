@@ -13,11 +13,16 @@ function prompt_ssl_cert {
 	if [ -n "$SSL_CERTFILE" ] || [ -n "$SSL_KEYFILE" ]; then
 		return
 	fi
-	if [ ! -t 0 ]; then
+	_tty_in=""
+	if [ -t 0 ]; then
+		_tty_in="/dev/stdin"
+	elif [ -r /dev/tty ]; then
+		_tty_in="/dev/tty"
+	else
 		return
 	fi
 	printf "Use a custom TLS certificate? (y/N) " >&3
-	if ! read -r -t 900 _ssl_reply; then
+	if ! read -r -t 900 _ssl_reply < "$_tty_in"; then
 		_warning "No response in 15 minutes. Using self-signed certificate."
 		return
 	fi
@@ -30,7 +35,7 @@ function prompt_ssl_cert {
 			printf "Paste certificate (end with a line containing END CERT):\n" >&3
 			_ssl_cert_content=""
 			while true; do
-				if ! read -r -t 900 _line; then
+				if ! read -r -t 900 _line < "$_tty_in"; then
 					_warning "No response in 15 minutes. Using self-signed certificate."
 					return
 				fi
@@ -43,7 +48,7 @@ function prompt_ssl_cert {
 			printf "Paste private key (end with a line containing END KEY):\n" >&3
 			_ssl_key_content=""
 			while true; do
-				if ! read -r -t 900 _line; then
+				if ! read -r -t 900 _line < "$_tty_in"; then
 					_warning "No response in 15 minutes. Using self-signed certificate."
 					return
 				fi
@@ -71,12 +76,17 @@ function prompt_report_services {
 	if [ -n "$REPORT_DOMAIN" ]; then
 		return
 	fi
-	if [ ! -t 0 ]; then
+	_tty_in=""
+	if [ -t 0 ]; then
+		_tty_in="/dev/stdin"
+	elif [ -r /dev/tty ]; then
+		_tty_in="/dev/tty"
+	else
 		REPORT_DOMAIN="electrumx.example.com"
 		return
 	fi
 	printf "Enter Electrum server domain for REPORT_SERVICES (default: electrumx.example.com): " >&3
-	if ! read -r -t 900 _report_domain; then
+	if ! read -r -t 900 _report_domain < "$_tty_in"; then
 		_warning "No response in 15 minutes. Using default REPORT_SERVICES domain."
 		REPORT_DOMAIN="electrumx.example.com"
 		return
