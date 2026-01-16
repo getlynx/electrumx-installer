@@ -17,8 +17,8 @@ installer=$(realpath $0)
 
 cd "$(dirname "$0")"
 
-# Self-update
-if which git > /dev/null 2>&1; then
+# Self-update (only when running from a git checkout)
+if command -v git > /dev/null 2>&1 && git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     _version_now=$(git rev-parse HEAD)
     git pull > /dev/null 2>&1
     if [ $_version_now != $(git rev-parse HEAD) ]; then
