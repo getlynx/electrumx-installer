@@ -21,6 +21,7 @@ function prompt_ssl_cert {
 	else
 		return
 	fi
+	printf "\n\n\n\n\n" >&3
 	printf "Use a custom TLS certificate? (y/N) " >&3
 	if ! read -r -t 900 _ssl_reply < "$_tty_in"; then
 		_warning "No response in 15 minutes. Using self-signed certificate."
@@ -32,7 +33,7 @@ function prompt_ssl_cert {
 			_ssl_key_path="/etc/electrumx/custom.key"
 			mkdir -p /etc/electrumx/
 
-			printf "Paste certificate (end with a line containing END CERT):\n" >&3
+			printf "Paste certificate (end with END CERT or -----END CERTIFICATE-----):\n" >&3
 			_ssl_cert_content=""
 			while true; do
 				if ! read -r -t 900 _line < "$_tty_in"; then
@@ -43,9 +44,12 @@ function prompt_ssl_cert {
 					break
 				fi
 				_ssl_cert_content="${_ssl_cert_content}${_line}\n"
+				if [ "$_line" = "-----END CERTIFICATE-----" ]; then
+					break
+				fi
 			done
 
-			printf "Paste private key (end with a line containing END KEY):\n" >&3
+			printf "Paste private key (end with END KEY or -----END PRIVATE KEY-----):\n" >&3
 			_ssl_key_content=""
 			while true; do
 				if ! read -r -t 900 _line < "$_tty_in"; then
@@ -56,6 +60,9 @@ function prompt_ssl_cert {
 					break
 				fi
 				_ssl_key_content="${_ssl_key_content}${_line}\n"
+				if [ "$_line" = "-----END PRIVATE KEY-----" ] || [ "$_line" = "-----END RSA PRIVATE KEY-----" ] || [ "$_line" = "-----END EC PRIVATE KEY-----" ]; then
+					break
+				fi
 			done
 
 			if [ -n "$_ssl_cert_content" ] && [ -n "$_ssl_key_content" ]; then
