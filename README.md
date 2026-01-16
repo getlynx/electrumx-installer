@@ -17,7 +17,8 @@ You can also set some options if you want more control:
 | -d --dbdir | Set database directory (default: /db/) |
 |------------|----------------------------------------|
 | --update   | Update previously installed version    |
-| --leveldb  | Use LevelDB instead of RocksDB         |
+
+Default database engine is LevelDB.
 
 For example:
 

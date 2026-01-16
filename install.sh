@@ -9,7 +9,7 @@ DB_DIR="/db"
 UPDATE_ONLY=0
 UPDATE_PYTHON=0
 VERBOSE=0
-USE_ROCKSDB=1
+USE_ROCKSDB=0
 ELECTRUMX_GIT_URL="https://github.com/spesmilo/electrumx"
 ELECTRUMX_GIT_BRANCH=""
 
@@ -38,10 +38,10 @@ Install electrumx.
 
  -h --help                     Show this help
  -v --verbose				   Enable verbose logging
- -d --dbdir dir                Set database directory (default: /db/)
- --update                      Update previously installed version
- --update-python			   Install Python 3.9 and use with electrumx (doesn't remove system installation of Python 3)
- --leveldb                     Use LevelDB instead of RocksDB
+-d --dbdir dir                 Set database directory (default: /db/)
+--update                       Update previously installed version
+--update-python			   Install Python 3.9 and use with electrumx (doesn't remove system installation of Python 3)
+--rocksdb                      Use RocksDB instead of LevelDB
 --electrumx-git-url url        Install ElectrumX from this URL instead
 --electrumx-git-branch branch  Install specific branch of ElectrumX repository
 HELP
@@ -62,6 +62,9 @@ HELP
 	    ;;
 	    --leveldb)
 	    USE_ROCKSDB=0
+	    ;;
+	    --rocksdb)
+	    USE_ROCKSDB=1
 	    ;;
 		--electrumx-git-url)
 		ELECTRUMX_GIT_URL="$2"
