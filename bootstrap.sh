@@ -4,12 +4,12 @@ if [ -d ~/.electrumx-installer ]; then
     echo "Either delete the directory or run ~/.electrumx-installer/install.sh directly."
     exit 1
 fi
-if which git > /dev/null 2>&1; then
+if command -v git > /dev/null 2>&1; then
     git clone https://github.com/getlynx/electrumx-installer ~/.electrumx-installer
     cd ~/.electrumx-installer/
 else
-    if ! (which wget > /dev/null 2>&1 && which unzip > /dev/null 2>&1); then
-        if which apt-get > /dev/null 2>&1; then
+    if ! (command -v wget > /dev/null 2>&1 && command -v unzip > /dev/null 2>&1); then
+        if command -v apt-get > /dev/null 2>&1; then
             apt-get update
             apt-get install -y git wget unzip
         else
