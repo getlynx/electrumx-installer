@@ -149,9 +149,10 @@ fi
 
 python=""
 
-for _python in python3 python3.9; do
-	if which $_python; then
-	python=$_python
+for _python in python3 python3.13 python3.12 python3.11 python3.10 python3.9; do
+	if which $_python > /dev/null 2>&1; then
+		python=$_python
+		break
 	fi
 done
 
@@ -166,29 +167,42 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 	_status "Creating database directory in $DB_DIR"
 	create_db_dir $DB_DIR
 
-	if [[ $($python -V 2>&1) == *"Python 3.8"* ]] > /dev/null 2>&1 && [ $UPDATE_PYTHON == 0 ]; then
-		_info "Python 3.8 is already installed."
-	elif [[ $($python -V 2>&1) == *"Python 3.9"* ]] > /dev/null 2>&1; then
-		_info "Python 3.9 is already installed."
-	else
-		_status "Installing Python 3.9"
-		python=python3.9
-		install_python39
-		if [[ $($python -V 2>&1) == *"Python 3.9"* ]] > /dev/null 2>&1; then
-			_info "Python 3.9 successfully installed"
+	if [ $UPDATE_PYTHON == 1 ] || [ -z "$python" ]; then
+		_status "Installing Python"
+		if declare -f install_python > /dev/null; then
+			install_python
+			python=python3
+		elif declare -f install_python39 > /dev/null; then
+			python=python3.9
+			install_python39
 		else
-			_error "Unable to install Python 3.9" 4
+			_error "No Python installer function found for this distribution" 4
 		fi
 	fi
+
+	if ! $python -V > /dev/null 2>&1; then
+		_error "Python is not available after installation" 4
+	fi
+	_info "Using $($python -V 2>&1)"
 	
 
 	_status "Installing git"
 	install_git
 
-	if ! $python -m pip > /dev/null 2>&1; then
+	ELECTRUMX_PYTHON="$python"
+	ELECTRUMX_PIP="$python -m pip"
+	if [ "$USE_VENV" == "1" ] && declare -f setup_venv > /dev/null; then
 		_progress_total=$(( $_progress_total + 1 ))
-		_status "Installing pip"
-		install_pip
+		_status "Setting up Python virtual environment"
+		setup_venv
+	fi
+
+	if [ "$USE_VENV" != "1" ]; then
+		if ! $ELECTRUMX_PYTHON -m pip > /dev/null 2>&1; then
+			_progress_total=$(( $_progress_total + 1 ))
+			_status "Installing pip"
+			install_pip
+		fi
 	fi
 
 	if [ $USE_ROCKSDB == 1 ]; then
@@ -245,8 +259,13 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 else
 	_info "Updating electrumx"
 	i=0
-	while $python -m pip show electrumx; do
-	    $python -m pip uninstall -y electrumx || true
+	ELECTRUMX_PYTHON="${ELECTRUMX_PYTHON:-$python}"
+	ELECTRUMX_PIP="${ELECTRUMX_PIP:-$python -m pip}"
+	if [ "$USE_VENV" == "1" ] && declare -f setup_venv > /dev/null; then
+		setup_venv
+	fi
+	while $ELECTRUMX_PIP show electrumx; do
+	    $ELECTRUMX_PIP uninstall -y electrumx || true
 	    ((i++))
 	    if "$i" -gt 5; then
 	        break
@@ -258,5 +277,5 @@ else
 		systemctl daemon-reload
 	fi
 	install_electrumx
-        _info "Installed $($python -m pip freeze | grep -i electrumx)"
+        _info "Installed $($ELECTRUMX_PIP freeze | grep -i electrumx)"
 fi

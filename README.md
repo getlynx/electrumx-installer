@@ -35,8 +35,8 @@ The following operating systems are officially supported and automatically being
 | Fedora 29      | [![centos](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22fedora:28%22&label=fedora:28)](https://travis-ci.org/bauerj/electrumx-installer/) |
 | Ubuntu 16.04   | [![ubuntu](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22ubuntu:16.04%22&label=ubuntu:16.04)](https://travis-ci.org/bauerj/electrumx-installer/) |
 | CentOS 7       | [![centos](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22centos:7%22&label=centos:7)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Debian Stretch | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:9%22&label=debian:9)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Debian Buster  | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:10%22&label=debian:10)](https://travis-ci.org/bauerj/electrumx-installer/) |
+| Debian Bookworm | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:12%22&label=debian:12)](https://travis-ci.org/bauerj/electrumx-installer/) |
+| Debian Trixie   | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:13%22&label=debian:13)](https://travis-ci.org/bauerj/electrumx-installer/) |
 
 
 If you prefer a different operating system that's not listed here, see
