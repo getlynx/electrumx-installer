@@ -10,7 +10,7 @@ is to customise the configuration and to start electrumx.
 ## Usage
 This installs electrumx using the default options:
 
-    wget https://raw.githubusercontent.com/bauerj/electrumx-installer/master/bootstrap.sh -O - | bash
+    wget https://raw.githubusercontent.com/getlynx/electrumx-installer/master/bootstrap.sh -O - | bash
 
 You can also set some options if you want more control:
 
@@ -21,7 +21,7 @@ You can also set some options if you want more control:
 
 For example:
 
-    wget https://raw.githubusercontent.com/bauerj/electrumx-installer/master/bootstrap.sh -O - | bash -s - -d /media/ssd/electrum-db
+    wget https://raw.githubusercontent.com/getlynx/electrumx-installer/master/bootstrap.sh -O - | bash -s - -d /media/ssd/electrum-db
 
      
 ## Operating System Compatibility
@@ -30,15 +30,15 @@ The following operating systems are officially supported and automatically being
 
 | OS | Status |
 |----------|---:|
-| Ubuntu 20.04   | [![ubuntu](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22ubuntu:20.04%22&label=ubuntu:20.04)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Ubuntu 18.04   | [![ubuntu](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22ubuntu:18.04%22&label=ubuntu:18.04)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Fedora 29      | [![centos](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22fedora:28%22&label=fedora:28)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Ubuntu 16.04   | [![ubuntu](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22ubuntu:16.04%22&label=ubuntu:16.04)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| CentOS 7       | [![centos](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22centos:7%22&label=centos:7)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Debian Bookworm | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:12%22&label=debian:12)](https://travis-ci.org/bauerj/electrumx-installer/) |
-| Debian Trixie   | [![debian](https://badges.herokuapp.com/travis/bauerj/electrumx-installer?env=IMAGE=%22debian:13%22&label=debian:13)](https://travis-ci.org/bauerj/electrumx-installer/) |
+| Ubuntu 20.04   | [![ubuntu](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22ubuntu:20.04%22&label=ubuntu:20.04)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| Ubuntu 18.04   | [![ubuntu](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22ubuntu:18.04%22&label=ubuntu:18.04)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| Fedora 29      | [![centos](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22fedora:28%22&label=fedora:28)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| Ubuntu 16.04   | [![ubuntu](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22ubuntu:16.04%22&label=ubuntu:16.04)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| CentOS 7       | [![centos](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22centos:7%22&label=centos:7)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| Debian Bookworm | [![debian](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22debian:12%22&label=debian:12)](https://travis-ci.org/getlynx/electrumx-installer/) |
+| Debian Trixie   | [![debian](https://badges.herokuapp.com/travis/getlynx/electrumx-installer?env=IMAGE=%22debian:13%22&label=debian:13)](https://travis-ci.org/getlynx/electrumx-installer/) |
 
 
 If you prefer a different operating system that's not listed here, see
-[`distributions/README.md`](https://github.com/bauerj/electrumx-installer/blob/master/distributions/README.md) to find out how to add it.
-Or open an [issue](https://github.com/bauerj/electrumx-installer/issues/new) if you'd rather not do that yourself.
+[`distributions/README.md`](https://github.com/getlynx/electrumx-installer/blob/master/distributions/README.md) to find out how to add it.
+Or open an [issue](https://github.com/getlynx/electrumx-installer/issues/new) if you'd rather not do that yourself.
