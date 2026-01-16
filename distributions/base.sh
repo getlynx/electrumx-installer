@@ -67,6 +67,27 @@ function prompt_ssl_cert {
 	esac
 }
 
+function prompt_report_services {
+	if [ -n "$REPORT_DOMAIN" ]; then
+		return
+	fi
+	if [ ! -t 0 ]; then
+		REPORT_DOMAIN="electrumx.example.com"
+		return
+	fi
+	printf "Enter Electrum server domain for REPORT_SERVICES (default: electrumx.example.com): " >&3
+	if ! read -r -t 900 _report_domain; then
+		_warning "No response in 15 minutes. Using default REPORT_SERVICES domain."
+		REPORT_DOMAIN="electrumx.example.com"
+		return
+	fi
+	if [ -n "$_report_domain" ]; then
+		REPORT_DOMAIN="$_report_domain"
+	else
+		REPORT_DOMAIN="electrumx.example.com"
+	fi
+}
+
 function setup_venv {
 	VENV_DIR="${VENV_DIR:-/opt/electrumx-venv}"
 	if [ ! -d "$VENV_DIR" ]; then
@@ -143,11 +164,13 @@ function generate_cert {
 		_info "OpenSSL not found. Skipping certificates.."
 		return
 	fi
+	REPORT_DOMAIN="${REPORT_DOMAIN:-electrumx.example.com}"
 	if [ -n "$SSL_CERTFILE" ] && [ -n "$SSL_KEYFILE" ]; then
 		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
 			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
 			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
-			echo "SERVICES=tcp://:50001,ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 			return
 		else
 			_warning "Provided SSL cert or key not found. Falling back to self-signed certificate."
@@ -167,7 +190,8 @@ function generate_cert {
 	cd $_DIR
 	echo -e "\nSSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf
 	echo "SSL_KEYFILE=/etc/electrumx/server.key" >> /etc/electrumx.conf
-    echo "SERVICES=tcp://:50001,ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+    echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+	echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 }
 
 function ver { printf "%03d%03d%03d%03d" $(echo "$1" | tr '.' ' '); }

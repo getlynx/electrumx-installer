@@ -261,6 +261,9 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 		if declare -f prompt_ssl_cert > /dev/null; then
 			prompt_ssl_cert
 		fi
+		if declare -f prompt_report_services > /dev/null; then
+			prompt_report_services
+		fi
 		generate_cert
 
 	fi
