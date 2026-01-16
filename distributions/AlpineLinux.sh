@@ -49,6 +49,16 @@ function generate_cert {
 		_info "OpenSSL not found. Skipping certificates.."
 		return
 	fi
+	if [ -n "$SSL_CERTFILE" ] && [ -n "$SSL_KEYFILE" ]; then
+		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
+			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
+			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
+			echo "SERVICES=tcp://:50001,ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			return
+		else
+			_warning "Provided SSL cert or key not found. Falling back to self-signed certificate."
+		fi
+	fi
 	_DIR=$(pwd)
 	mkdir -p /etc/electrumx/
 	cd /etc/electrumx

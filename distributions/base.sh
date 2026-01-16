@@ -9,6 +9,64 @@ function check_pyrocksdb {
     $_py -B -c "import rocksdb"
 }
 
+function prompt_ssl_cert {
+	if [ -n "$SSL_CERTFILE" ] || [ -n "$SSL_KEYFILE" ]; then
+		return
+	fi
+	if [ ! -t 0 ]; then
+		return
+	fi
+	printf "Use a custom TLS certificate? (y/N) " >&3
+	if ! read -r -t 900 _ssl_reply; then
+		_warning "No response in 15 minutes. Using self-signed certificate."
+		return
+	fi
+	case "$_ssl_reply" in
+		y|Y|yes|YES)
+			_ssl_cert_path="/etc/electrumx/custom.crt"
+			_ssl_key_path="/etc/electrumx/custom.key"
+			mkdir -p /etc/electrumx/
+
+			printf "Paste certificate (end with a line containing END CERT):\n" >&3
+			_ssl_cert_content=""
+			while true; do
+				if ! read -r -t 900 _line; then
+					_warning "No response in 15 minutes. Using self-signed certificate."
+					return
+				fi
+				if [ "$_line" = "END CERT" ]; then
+					break
+				fi
+				_ssl_cert_content="${_ssl_cert_content}${_line}\n"
+			done
+
+			printf "Paste private key (end with a line containing END KEY):\n" >&3
+			_ssl_key_content=""
+			while true; do
+				if ! read -r -t 900 _line; then
+					_warning "No response in 15 minutes. Using self-signed certificate."
+					return
+				fi
+				if [ "$_line" = "END KEY" ]; then
+					break
+				fi
+				_ssl_key_content="${_ssl_key_content}${_line}\n"
+			done
+
+			if [ -n "$_ssl_cert_content" ] && [ -n "$_ssl_key_content" ]; then
+				printf "%b" "$_ssl_cert_content" > "$_ssl_cert_path"
+				printf "%b" "$_ssl_key_content" > "$_ssl_key_path"
+				chown electrumx:electrumx /etc/electrumx -R
+				chmod 600 "$_ssl_key_path"
+				SSL_CERTFILE="$_ssl_cert_path"
+				SSL_KEYFILE="$_ssl_key_path"
+			else
+				_warning "Certificate or key input was empty. Using self-signed certificate."
+			fi
+			;;
+	esac
+}
+
 function setup_venv {
 	VENV_DIR="${VENV_DIR:-/opt/electrumx-venv}"
 	if [ ! -d "$VENV_DIR" ]; then
@@ -84,6 +142,16 @@ function generate_cert {
 	if ! which openssl > /dev/null 2>&1; then
 		_info "OpenSSL not found. Skipping certificates.."
 		return
+	fi
+	if [ -n "$SSL_CERTFILE" ] && [ -n "$SSL_KEYFILE" ]; then
+		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
+			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
+			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
+			echo "SERVICES=tcp://:50001,ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			return
+		else
+			_warning "Provided SSL cert or key not found. Falling back to self-signed certificate."
+		fi
 	fi
 	_DIR=$(pwd)
 	mkdir -p /etc/electrumx/

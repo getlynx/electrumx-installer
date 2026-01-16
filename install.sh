@@ -258,6 +258,9 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 		install_init
 
 		_status "Generating TLS certificates"
+		if declare -f prompt_ssl_cert > /dev/null; then
+			prompt_ssl_cert
+		fi
 		generate_cert
 
 	fi
