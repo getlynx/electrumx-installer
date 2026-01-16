@@ -184,7 +184,12 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 		_error "Python is not available after installation" 4
 	fi
 	_info "Using $($python -V 2>&1)"
-	
+
+	if [[ $($python -V 2>&1) == *"Python 3.13"* ]] && [ $USE_ROCKSDB == 1 ]; then
+		_warning "Python 3.13 detected. Falling back to LevelDB because python-rocksdb does not build cleanly yet."
+		USE_ROCKSDB=0
+	fi
+
 
 	_status "Installing git"
 	install_git
@@ -233,9 +238,9 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
                 _error "pyrocksdb installation doesn't work" 6
             fi
 		fi
-#	else
-#		_status "Installing leveldb"
-#		install_leveldb
+	else
+		_status "Installing leveldb"
+		install_leveldb
 	fi
 
 	_status "Installing electrumx"
