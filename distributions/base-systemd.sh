@@ -26,6 +26,10 @@ function install_init {
 		awk -v repl="# DB_DIRECTORY: The path to the database directory. Relative paths should be relative to the parent process working directory. This is the directory of the run script if you use it. In most cases, the default value '\''/db'\'' will work fine." '
 			BEGIN { prev=""; has_prev=0 }
 			{
+				if ($0 == "# REQUIRED") {
+					print repl
+					next
+				}
 				if ($0 ~ /^#?[[:space:]]*DB_DIRECTORY=/) {
 					if (has_prev && prev ~ /^#/) {
 						print repl
@@ -47,10 +51,7 @@ function install_init {
 		cat "$_tmp" > "$_conf"
 		rm -f "$_tmp"
 	fi
-	echo -e "\n# COIN: set to a single coin you want to serve. Case insensitive." >> /etc/electrumx.conf
-	echo "# Example: COIN=Bitcoin" >> /etc/electrumx.conf
-	echo "# Example: COIN=Lynx" >> /etc/electrumx.conf
-	echo "# Example: COIN=DigitalCoin" >> /etc/electrumx.conf
+	echo -e "\n# COIN: set to a single coin you want to serve. Example: COIN=Lynx" >> /etc/electrumx.conf
 	if [ -n "$COIN" ]; then
 		echo "COIN=$COIN" >> /etc/electrumx.conf
 	fi
@@ -60,5 +61,9 @@ function install_init {
 	systemctl daemon-reload
 	systemctl enable electrumx
 	systemctl status electrumx
-	_info "Use service electrumx start to start electrumx once it's configured"
+	_status "Systemd service installed"
+	_info "Use: systemctl start electrumx"
+	_info "Check status: systemctl status electrumx"
+	_info "View logs: journalctl -u electrumx -f"
+	_info "Enable at boot (already done): systemctl enable electrumx"
 }
