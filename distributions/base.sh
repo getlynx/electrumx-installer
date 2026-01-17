@@ -207,19 +207,20 @@ function generate_cert {
 	REPORT_DOMAIN="${REPORT_DOMAIN:-electrumx.example.com}"
 	if [ -n "$SSL_CERTFILE" ] && [ -n "$SSL_KEYFILE" ]; then
 		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
-			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
+			echo -e "\n# SSL_CERTFILE/SSL_KEYFILE point to your TLS cert and key." >> /etc/electrumx.conf
+			echo "# You can replace these files manually (e.g., 15yr Cloudflare Origin Certificate), or" >> /etc/electrumx.conf
+			echo "# use Certbot with automation to update these paths as certificates rotate." >> /etc/electrumx.conf
+			echo "SSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
 			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
-			echo "" >> /etc/electrumx.conf
-			echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
-			echo "#  - tcp://:50001 for plaintext TCP clients (optional, not enabled here)" >> /etc/electrumx.conf
+			echo -e "\n# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+			echo "#  - tcp://:50001 for plaintext TCP clients (optional, not enabled by default)" >> /etc/electrumx.conf
 			echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
 			echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
 			echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
 			echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
-			echo "" >> /etc/electrumx.conf
-			echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
+			echo -e "\n# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
 			echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
-			echo "# Optional plaintext advertise: tcp://<domain>:50001 (not used here)." >> /etc/electrumx.conf
+			echo "# Optional plaintext advertise: tcp://<domain>:50001 (optional, not enabled by default)." >> /etc/electrumx.conf
 			echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 			return
 		else
@@ -238,17 +239,18 @@ function generate_cert {
 	chown electrumx:electrumx /etc/electrumx -R
 	chmod 600 /etc/electrumx/server*
 	cd $_DIR
-	echo -e "\nSSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf
+	echo -e "\n# SSL_CERTFILE/SSL_KEYFILE point to your TLS cert and key." >> /etc/electrumx.conf
+	echo "# You can replace these files manually (e.g., 15yr Cloudflare Origin Certificate), or" >> /etc/electrumx.conf
+	echo "# use Certbot with automation to update these paths as certificates rotate." >> /etc/electrumx.conf
+	echo "SSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf
 	echo "SSL_KEYFILE=/etc/electrumx/server.key" >> /etc/electrumx.conf
-	echo "" >> /etc/electrumx.conf
-	echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+	echo -e "\n# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
 	echo "#  - tcp://:50001 for plaintext TCP clients (optional, not enabled here)" >> /etc/electrumx.conf
 	echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
 	echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
 	echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
     echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
-	echo "" >> /etc/electrumx.conf
-	echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
+	echo -e "\n# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
 	echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
 	echo "# Optional plaintext advertise: tcp://<domain>:50001 (not used here)." >> /etc/electrumx.conf
 	echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
