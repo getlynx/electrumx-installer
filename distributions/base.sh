@@ -207,7 +207,7 @@ function generate_cert {
 	REPORT_DOMAIN="${REPORT_DOMAIN:-electrumx.example.com}"
 	if [ -n "$SSL_CERTFILE" ] && [ -n "$SSL_KEYFILE" ]; then
 		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
-			echo -e "\n# SSL_CERTFILE/SSL_KEYFILE point to your TLS cert and key." >> /etc/electrumx.conf
+			echo -e "\n# SSL_CERTFILE/SSL_KEYFILE: point to your TLS cert and key." >> /etc/electrumx.conf
 			echo "# You can replace these files manually (e.g., 15yr Cloudflare Origin Certificate), or" >> /etc/electrumx.conf
 			echo "# use Certbot with automation to update these paths as certificates rotate." >> /etc/electrumx.conf
 			echo "SSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
@@ -239,7 +239,7 @@ function generate_cert {
 	chown electrumx:electrumx /etc/electrumx -R
 	chmod 600 /etc/electrumx/server*
 	cd $_DIR
-	echo -e "\n# SSL_CERTFILE/SSL_KEYFILE point to your TLS cert and key." >> /etc/electrumx.conf
+	echo -e "\n# SSL_CERTFILE/SSL_KEYFILE: point to your TLS cert and key." >> /etc/electrumx.conf
 	echo "# You can replace these files manually (e.g., 15yr Cloudflare Origin Certificate), or" >> /etc/electrumx.conf
 	echo "# use Certbot with automation to update these paths as certificates rotate." >> /etc/electrumx.conf
 	echo "SSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf

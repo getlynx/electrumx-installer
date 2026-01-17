@@ -22,9 +22,35 @@ function install_init {
 		}' "$_conf" >> "$_tmp"
 		cat "$_tmp" > "$_conf"
 		rm -f "$_tmp"
+		_tmp=$(mktemp)
+		awk -v repl="# DB_DIRECTORY: The path to the database directory. Relative paths should be relative to the parent process working directory. This is the directory of the run script if you use it. In most cases, the default value '\''/db'\'' will work fine." '
+			BEGIN { prev=""; has_prev=0 }
+			{
+				if ($0 ~ /^DB_DIRECTORY=/) {
+					if (has_prev && prev ~ /^#/) {
+						print repl
+					} else {
+						if (has_prev) print prev
+						print repl
+					}
+					print $0
+					prev=""
+					has_prev=0
+					next
+				}
+				if (has_prev) print prev
+				prev=$0
+				has_prev=1
+			}
+			END { if (has_prev) print prev }
+		' "$_conf" > "$_tmp"
+		cat "$_tmp" > "$_conf"
+		rm -f "$_tmp"
 	fi
-	echo -e "\n# Enter the chain/network (e.g. Lynx, DigitalCoin, InfiniLooP). Set to the coin you want to serve. Not case sensitive." >> /etc/electrumx.conf
+	echo -e "\n# COIN: set to the coin you want to serve. Case insensitive." >> /etc/electrumx.conf
+	echo "# Example: COIN=Bitcoin" >> /etc/electrumx.conf
 	echo "# Example: COIN=Lynx" >> /etc/electrumx.conf
+	echo "# Example: COIN=DigitalCoin" >> /etc/electrumx.conf
 	if [ -n "$COIN" ]; then
 		echo "COIN=$COIN" >> /etc/electrumx.conf
 	fi
