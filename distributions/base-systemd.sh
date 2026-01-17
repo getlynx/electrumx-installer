@@ -26,7 +26,7 @@ function install_init {
 		awk -v repl="# DB_DIRECTORY: The path to the database directory. Relative paths should be relative to the parent process working directory. This is the directory of the run script if you use it. In most cases, the default value '\''/db'\'' will work fine." '
 			BEGIN { prev=""; has_prev=0 }
 			{
-				if ($0 ~ /^DB_DIRECTORY=/) {
+				if ($0 ~ /^#?[[:space:]]*DB_DIRECTORY=/) {
 					if (has_prev && prev ~ /^#/) {
 						print repl
 					} else {
@@ -47,7 +47,7 @@ function install_init {
 		cat "$_tmp" > "$_conf"
 		rm -f "$_tmp"
 	fi
-	echo -e "\n# COIN: set to the coin you want to serve. Case insensitive." >> /etc/electrumx.conf
+	echo -e "\n# COIN: set to a single coin you want to serve. Case insensitive." >> /etc/electrumx.conf
 	echo "# Example: COIN=Bitcoin" >> /etc/electrumx.conf
 	echo "# Example: COIN=Lynx" >> /etc/electrumx.conf
 	echo "# Example: COIN=DigitalCoin" >> /etc/electrumx.conf
