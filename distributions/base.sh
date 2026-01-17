@@ -105,6 +105,28 @@ function prompt_report_services {
 	fi
 }
 
+function prompt_coin {
+	if [ -n "$COIN" ]; then
+		return
+	fi
+	_tty_in=""
+	if [ -t 0 ]; then
+		_tty_in="/dev/stdin"
+	elif [ -r /dev/tty ]; then
+		_tty_in="/dev/tty"
+	else
+		_error "COIN is required but no interactive terminal is available." 10
+	fi
+	printf "Enter COIN (examples: Bitcoin, Litecoin, Dash, Lynx). Value is required: " >&3
+	if ! read -r -t 900 _coin < "$_tty_in"; then
+		_error "No COIN provided within 15 minutes." 10
+	fi
+	if [ -z "$_coin" ]; then
+		_error "COIN cannot be blank." 10
+	fi
+	COIN="$_coin"
+}
+
 function setup_venv {
 	VENV_DIR="${VENV_DIR:-/opt/electrumx-venv}"
 	if [ ! -d "$VENV_DIR" ]; then
@@ -186,7 +208,13 @@ function generate_cert {
 		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
 			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
 			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
+			echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+			echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
+			echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
+			echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
 			echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
+			echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
 			echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 			return
 		else
@@ -207,7 +235,13 @@ function generate_cert {
 	cd $_DIR
 	echo -e "\nSSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf
 	echo "SSL_KEYFILE=/etc/electrumx/server.key" >> /etc/electrumx.conf
+	echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+	echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
+	echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
+	echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
     echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+	echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
+	echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
 	echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 }
 

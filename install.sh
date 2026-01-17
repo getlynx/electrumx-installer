@@ -258,6 +258,9 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 	if [ $UPDATE_PYTHON == 0 ]; then
 
 		_status "Installing init scripts"
+		if declare -f prompt_coin > /dev/null; then
+			prompt_coin
+		fi
 		install_init
 
 		_status "Generating TLS certificates"
