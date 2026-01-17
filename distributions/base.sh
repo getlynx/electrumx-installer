@@ -209,13 +209,17 @@ function generate_cert {
 		if [ -f "$SSL_CERTFILE" ] && [ -f "$SSL_KEYFILE" ]; then
 			echo -e "\nSSL_CERTFILE=$SSL_CERTFILE" >> /etc/electrumx.conf
 			echo "SSL_KEYFILE=$SSL_KEYFILE" >> /etc/electrumx.conf
+			echo "" >> /etc/electrumx.conf
 			echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+			echo "#  - tcp://:50001 for plaintext TCP clients (optional, not enabled here)" >> /etc/electrumx.conf
 			echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
 			echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
 			echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
 			echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+			echo "" >> /etc/electrumx.conf
 			echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
 			echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
+			echo "# Optional plaintext advertise: tcp://<domain>:50001 (not used here)." >> /etc/electrumx.conf
 			echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 			return
 		else
@@ -236,13 +240,17 @@ function generate_cert {
 	cd $_DIR
 	echo -e "\nSSL_CERTFILE=/etc/electrumx/server.crt" >> /etc/electrumx.conf
 	echo "SSL_KEYFILE=/etc/electrumx/server.key" >> /etc/electrumx.conf
+	echo "" >> /etc/electrumx.conf
 	echo "# SERVICES: listeners this server opens (tcp/ssl/wss/rpc). We enable only secure ports:" >> /etc/electrumx.conf
+	echo "#  - tcp://:50001 for plaintext TCP clients (optional, not enabled here)" >> /etc/electrumx.conf
 	echo "#  - ssl://:50002 for TLS TCP clients" >> /etc/electrumx.conf
 	echo "#  - wss://:50004 for TLS WebSocket clients" >> /etc/electrumx.conf
 	echo "# rpc:// is local-only RPC for administration; no public port here." >> /etc/electrumx.conf
     echo "SERVICES=ssl://:50002,wss://:50004,rpc://" >> /etc/electrumx.conf
+	echo "" >> /etc/electrumx.conf
 	echo "# REPORT_SERVICES: public addresses/ports advertised to peers/clients." >> /etc/electrumx.conf
 	echo "# We advertise only secure endpoints (ssl/wss) for clients." >> /etc/electrumx.conf
+	echo "# Optional plaintext advertise: tcp://<domain>:50001 (not used here)." >> /etc/electrumx.conf
 	echo "REPORT_SERVICES=wss://$REPORT_DOMAIN:50004,ssl://$REPORT_DOMAIN:50002" >> /etc/electrumx.conf
 }
 
