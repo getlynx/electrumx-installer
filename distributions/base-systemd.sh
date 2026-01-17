@@ -4,7 +4,7 @@ function install_init {
 	fi
 	cp /tmp/electrumx/contrib/systemd/electrumx.service /etc/systemd/system/electrumx.service
 	cp /tmp/electrumx/contrib/systemd/electrumx.conf /etc/
-	echo -e "\n# Enter the chain/network (e.g. Lynx, DigitalCoin, InfiniLooP, etc). Set to the coin you want to serve. Not case sensitive." >> /etc/electrumx.conf
+	echo -e "\n# Enter the chain/network (e.g. Lynx, DigitalCoin, InfiniLooP). Set to the coin you want to serve. Not case sensitive." >> /etc/electrumx.conf
 	echo "# Example: COIN=Lynx" >> /etc/electrumx.conf
 	if [ -n "$COIN" ]; then
 		echo "COIN=$COIN" >> /etc/electrumx.conf

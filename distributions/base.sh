@@ -117,7 +117,8 @@ function prompt_coin {
 	else
 		_error "COIN is required but no interactive terminal is available." 10
 	fi
-	printf "Enter COIN (examples: Bitcoin, Litecoin, Dash, Lynx). Value is required: " >&3
+	printf "\n\n\n\n\n" >&3
+	printf "Enter the chain or network (e.g., Lynx, DigitalCoin, InfiniLooP). Value is required: " >&3
 	if ! read -r -t 900 _coin < "$_tty_in"; then
 		_error "No COIN provided within 15 minutes." 10
 	fi
