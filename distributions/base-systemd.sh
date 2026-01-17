@@ -23,21 +23,27 @@ function install_init {
 		cat "$_tmp" > "$_conf"
 		rm -f "$_tmp"
 		_tmp=$(mktemp)
-		awk -v repl="# DB_DIRECTORY: The path to the database directory. Relative paths should be relative to the parent process working directory. This is the directory of the run script if you use it. In most cases, the default value '\''/db'\'' will work fine." '
+		awk -v repl1="# DB_DIRECTORY: The path to the database directory. Relative paths should be relative to the parent process working directory." \
+			-v repl2="# This is the directory of the run script if you use it. In most cases, the default value '\''/db'\'' will work fine." '
 			BEGIN { prev=""; has_prev=0 }
 			{
 				if ($0 == "# REQUIRED") {
-					print repl
+					print ""
+					print repl1
+					print repl2
 					next
 				}
 				if ($0 ~ /^#?[[:space:]]*DB_DIRECTORY=/) {
 					if (has_prev && prev ~ /^#/) {
-						print repl
+						print repl1
+						print repl2
 					} else {
 						if (has_prev) print prev
-						print repl
+						print repl1
+						print repl2
 					}
 					print $0
+					print ""
 					prev=""
 					has_prev=0
 					next
