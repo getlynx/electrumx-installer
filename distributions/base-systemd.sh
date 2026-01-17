@@ -62,8 +62,4 @@ function install_init {
 	systemctl enable electrumx
 	systemctl status electrumx
 	_status "Systemd service installed"
-	_info "Use: systemctl start electrumx"
-	_info "Check status: systemctl status electrumx"
-	_info "View logs: journalctl -u electrumx -f"
-	_info "Enable at boot (already done): systemctl enable electrumx"
 }

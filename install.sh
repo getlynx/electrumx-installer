@@ -279,6 +279,12 @@ if [ $UPDATE_ONLY == 0 ] || [ $UPDATE_PYTHON == 1 ]; then
 		package_cleanup	
 	fi
 	_info "electrumx has been installed successfully. Edit /etc/electrumx.conf to configure it."
+	if [ -f /etc/systemd/system/electrumx.service ]; then
+		_info "Use: systemctl start electrumx"
+		_info "Check status: systemctl status electrumx"
+		_info "View logs: journalctl -u electrumx -f"
+		_info "Enable at boot (already done): systemctl enable electrumx"
+	fi
 else
 	_info "Updating electrumx"
 	i=0
